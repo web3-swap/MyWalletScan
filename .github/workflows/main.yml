@@ -1,0 +1,32 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # 或其他您希望触发 CI 的分支
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18' # 或其他您希望使用的 Node.js 版本
+
+      - name: Run Export
+        run: |
+          export TZ='Asia/Shanghai'
+          npm install
+          npm run build
+          echo "www.web3-swap.github.io" >> ./dist/CNAME    # 自己预期的网站
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.0
+        with:
+          branch: gh-pages # 部署到的分支（通常为 gh-pages）
+          folder: ./dist # 构建生成的静态文件夹路径（根据您的项目配置进行修改）
